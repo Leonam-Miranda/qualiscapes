@@ -4,10 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
 
 @Entity
 public class Periodico {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,16 +27,12 @@ public class Periodico {
         this.tier = tier;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getIssn() {
@@ -47,15 +43,7 @@ public class Periodico {
         return avaliationArea;
     }
 
-    public void setAvaliationArea(String avaliationArea) {
-        this.avaliationArea = avaliationArea;
-    }
-
     public String getTier() {
         return tier;
-    }
-
-    public void setTier(String tier) {
-        this.tier = tier;
     }
 }
