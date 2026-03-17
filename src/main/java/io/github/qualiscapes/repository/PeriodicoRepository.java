@@ -11,4 +11,6 @@ public interface PeriodicoRepository extends JpaRepository<Periodico, Long> {
 
       @Query("SELECT DISTINCT p.avaliationArea FROM Periodico p ORDER BY p.avaliationArea") //busca todas as áreas sem repetir
       List<String> findDistinctAvaliationAreas();
+
+      List<Periodico> findByAvaliationAreaIgnoreCaseAndTierIgnoreCase(String area, String tier);
 }
