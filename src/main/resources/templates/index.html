@@ -107,6 +107,12 @@
                         Pesquise periódicos por área, classificação ou título/ISSN.
                     </p>
 
+                    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span th:text="${errorMessage}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+
                     <form action="/" method="get" class="row g-3">
 
                         <!-- Área -->
