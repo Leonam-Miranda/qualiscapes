@@ -15,62 +15,70 @@
     <style>
 
         body{
-            font-family:'Inter',sans-serif;
-            background: linear-gradient(180deg,#f8fafc,#eef2f7);
-            color:#334155;
+        font-family:'Inter',sans-serif;
+        background:linear-gradient(180deg,#f8fafc,#eef2f7);
+        color:#334155;
         }
 
         /* Navbar */
 
         .navbar{
-            background:#0f172a;
+        background:#0f172a;
         }
 
         /* Card */
 
         .card{
-            border:none;
-            border-radius:14px;
+        border:none;
+        border-radius:14px;
         }
 
-        /* Badge Qualis */
+        /* Badge */
 
         .badge-qualis{
-            font-weight:700;
-            font-size:0.9rem;
-            padding:8px 12px;
-            border-radius:8px;
+        font-weight:700;
+        font-size:0.9rem;
+        padding:8px 12px;
+        border-radius:8px;
         }
 
-        .bg-a1{background:#15803d;color:white;}
-        .bg-a2{background:#16a34a;color:white;}
-        .bg-b1{background:#ca8a04;color:white;}
+        .bg-a1{ background:#065f46; color:white; }
+        .bg-a2{ background:#047857; color:white; }
+        .bg-a3{ background:#059669; color:white; }
+        .bg-a4{ background:#10b981; color:white; }
 
-        /* tabela */
+        .bg-b1{ background:#d97706; color:white; }
+        .bg-b2{ background:#ea580c; color:white; }
+        .bg-b3{ background:#f97316; color:white; }
+        .bg-b4{ background:#fb923c; color:white; }
+
+        .bg-c{ background:#6b7280; color:white; }
+
+        /* Table */
 
         .table thead{
-            background:#f1f5f9;
-            font-weight:600;
+        background:#f1f5f9;
+        font-weight:600;
         }
 
-        /* estado vazio */
+        /* Empty state */
 
         .empty-state{
-            padding:50px;
-            text-align:center;
-            color:#94a3b8;
+        padding:50px;
+        text-align:center;
+        color:#94a3b8;
         }
 
-        /* botão */
+        /* Button */
 
         .btn-primary{
-            background:#2563eb;
-            border:none;
-            font-weight:600;
+        background:#2563eb;
+        border:none;
+        font-weight:600;
         }
 
         .btn-primary:hover{
-            background:#1d4ed8;
+        background:#1d4ed8;
         }
 
     </style>
@@ -80,18 +88,13 @@
 
 <nav class="navbar navbar-dark shadow-sm mb-5">
     <div class="container">
-
-        <a class="navbar-brand fw-bold" href="/">
-            🚀 QUALISCAPES
-        </a>
-
+        <a class="navbar-brand fw-bold" href="/">🚀 QUALISCAPES</a>
     </div>
 </nav>
 
 <div class="container">
 
     <div class="row justify-content-center">
-
         <div class="col-lg-10">
 
             <div class="card shadow-sm mb-4">
@@ -101,35 +104,86 @@
                     <h4 class="fw-bold mb-1">Consulta de Periódicos CAPES</h4>
 
                     <p class="text-muted mb-4">
-                        Pesquise periódicos por área de avaliação e descubra seu estrato Qualis.
+                        Pesquise periódicos por área, classificação ou título/ISSN.
                     </p>
 
                     <form action="/" method="get" class="row g-3">
-                        <div class="col-md-7">
-                            <label class="form-label fw-semibold">Área de Avaliação</label>
-                            <select id="select-area" name="area" placeholder="Selecione a área...">
-                                <option value="">Selecione uma Área...</option>
+
+                        <!-- Área -->
+
+                        <div class="col-md-5">
+
+                            <label class="form-label fw-semibold">
+                                Área de Avaliação
+                            </label>
+
+                            <select id="select-area" name="area">
+
+                                <option value="">Todas as áreas</option>
+
                                 <option th:each="a : ${areas}"
                                         th:value="${a}"
                                         th:text="${a}"
-                                        th:selected="${a == areaSelecionada}"></option>
+                                        th:selected="${a == areaSelecionada}">
+                                </option>
+
                             </select>
+
                         </div>
 
+                        <!-- Classificação -->
+
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold">Classificação</label>
-                            <select name="tier" class="form-select py-2">
-                                <option value="">Todas as classificações</option>
+
+                            <label class="form-label fw-semibold">
+                                Classificação
+                            </label>
+
+                            <select name="tier" class="form-select">
+
+                                <option value="">Todas</option>
+
                                 <option th:each="t : ${tiers}"
                                         th:value="${t}"
                                         th:text="${t}"
-                                        th:selected="${t == tierSelecionado}"></option>
+                                        th:selected="${t == tierSelecionado}">
+                                </option>
+
                             </select>
+
                         </div>
 
-                        <div class="col-md-2 d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Consultar</button>
+                        <!-- Busca -->
+
+                        <div class="col-md-4">
+
+                            <label class="form-label fw-semibold">
+                                Título ou ISSN
+                            </label>
+
+                            <input
+                                    type="text"
+                                    name="search"
+                                    class="form-control"
+                                    placeholder="Ex: Nature ou 0028-0836"
+                                    th:value="${buscaTermo}">
+
                         </div>
+
+                        <!-- Botão -->
+
+                        <div class="col-12">
+
+                            <button
+                                    type="submit"
+                                    class="btn btn-primary px-4">
+
+                                Consultar
+
+                            </button>
+
+                        </div>
+
                     </form>
 
                 </div>
@@ -190,7 +244,7 @@
                             <tr th:if="${periodicos.empty}">
 
                                 <td colspan="3" class="empty-state">
-                                    Nenhum periódico encontrado para esta área.
+                                    Nenhum periódico encontrado.
                                 </td>
 
                             </tr>
@@ -206,7 +260,6 @@
             </div>
 
         </div>
-
     </div>
 
 </div>
