@@ -15,18 +15,26 @@ public class PeriodicoRestController {
 
     private final PeriodicoService service;
 
-    public PeriodicoRestController(PeriodicoService service){
+    public PeriodicoRestController(PeriodicoService service) {
         this.service = service;
     }
 
     @GetMapping("/areas")
-    public List<String> listAreas(){
+    public List<String> listAreas() {
         return service.getAvailableAreas();
     }
 
-    @GetMapping("/busca")
-    public List<Periodico> buscaPorArea(@RequestParam String area) {
-        return service.findByArea(area);
+    @GetMapping("/tiers")
+    public List<String> listTiers() {
+        return service.getAvailableTiers();
     }
 
+    @GetMapping("/busca")
+    public List<Periodico> busca(
+            @RequestParam(required = false) String area,
+            @RequestParam(required = false) List<String> tiers,
+            @RequestParam(required = false) String search
+    ) {
+        return service.search(area, tiers, search);
+    }
 }
