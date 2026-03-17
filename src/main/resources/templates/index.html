@@ -7,30 +7,280 @@
     <title>Qualiscapes | Consulta CAPES</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 
     <style>
+        :root{
+            --bg-page:#f3f7fb;
+            --bg-soft:#f8fbff;
+            --card-bg:rgba(255,255,255,0.84);
+            --card-border:rgba(148,163,184,0.18);
+            --text-main:#0f172a;
+            --text-body:#334155;
+            --text-muted:#64748b;
+            --line:#e2e8f0;
+            --primary:#2563eb;
+            --primary-dark:#1d4ed8;
+            --shadow-soft:0 10px 30px rgba(15,23,42,0.06);
+            --shadow-card:0 18px 45px rgba(15,23,42,0.08);
+        }
+
         body{
             font-family:'Inter',sans-serif;
-            background:linear-gradient(180deg,#f8fafc,#eef2f7);
-            color:#334155;
+            background:
+                radial-gradient(circle at top, rgba(59,130,246,0.08), transparent 28%),
+                linear-gradient(180deg,#f8fbff 0%, var(--bg-page) 100%);
+            color:var(--text-body);
         }
 
         .navbar{
             background:#0f172a;
+            border-bottom:1px solid rgba(255,255,255,0.06);
         }
 
-        .card{
+        .brand-mark{
+            width:34px;
+            height:34px;
+            border-radius:10px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+            color:white;
+            font-weight:800;
+            box-shadow:0 8px 20px rgba(37,99,235,0.25);
+        }
+
+        .hero-section{
+            padding:32px 0 8px;
+        }
+
+        .hero-card{
+            background:
+                radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 28%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color:white;
+            border-radius:24px;
+            padding:42px;
+            position:relative;
+            overflow:hidden;
             border:none;
-            border-radius:14px;
+            box-shadow:0 24px 60px rgba(15,23,42,0.22);
+        }
+
+        .hero-eyebrow{
+            display:inline-block;
+            font-size:0.8rem;
+            font-weight:700;
+            letter-spacing:0.08em;
+            text-transform:uppercase;
+            color:#93c5fd;
+        }
+
+        .hero-title{
+            font-size:2rem;
+            line-height:1.15;
+            font-weight:800;
+            max-width:720px;
+            color:#f8fafc;
+        }
+
+        .hero-subtitle{
+            font-size:1rem;
+            color:#cbd5e1;
+            max-width:680px;
+        }
+
+        .hero-tag{
+            background:rgba(255,255,255,0.08);
+            color:#e2e8f0;
+            border:1px solid rgba(255,255,255,0.12);
+            padding:8px 12px;
+            border-radius:999px;
+            font-size:0.9rem;
+            font-weight:500;
+            backdrop-filter:blur(8px);
+        }
+
+        .hero-stats{
+            display:grid;
+            gap:12px;
+        }
+
+        .stat-box{
+            background:rgba(255,255,255,0.08);
+            border:1px solid rgba(255,255,255,0.12);
+            border-radius:18px;
+            padding:16px 18px;
+            backdrop-filter:blur(8px);
+        }
+
+        .stat-box small{
+            display:block;
+            color:#93c5fd;
+            margin-bottom:4px;
+            font-size:0.8rem;
+        }
+
+        .stat-box strong{
+            color:#f8fafc;
+            font-size:1rem;
+        }
+
+        .surface-card{
+            background:var(--card-bg);
+            border:1px solid var(--card-border);
+            border-radius:20px;
+            box-shadow:var(--shadow-card);
+            backdrop-filter:blur(10px);
+        }
+
+        .filter-card{
+            margin-top:-18px;
+            position:relative;
+            z-index:2;
+        }
+
+        .section-title{
+            font-size:1.15rem;
+            font-weight:700;
+            color:var(--text-main);
+            margin-bottom:4px;
+        }
+
+        .section-subtitle{
+            color:var(--text-muted);
+            margin-bottom:0;
+        }
+
+        .form-label{
+            color:var(--text-main);
+            font-size:0.95rem;
+        }
+
+        .form-control,
+        .form-select,
+        .ts-control{
+            min-height:46px;
+            border-radius:14px !important;
+            border:1px solid #dbe4ee !important;
+            box-shadow:none !important;
+            background:#fff !important;
+            color:var(--text-main);
+        }
+
+        .form-control:focus,
+        .form-select:focus{
+            border-color:#93c5fd !important;
+            box-shadow:0 0 0 0.2rem rgba(59,130,246,0.12) !important;
+        }
+
+        .form-text{
+            color:var(--text-muted);
+            font-size:0.84rem;
+        }
+
+        .ts-wrapper.multi .ts-control > div{
+            background:#e8f0fe;
+            color:#0f172a;
+            border-radius:10px;
+            padding:4px 8px;
+            font-weight:600;
+        }
+
+        .ts-wrapper.focus .ts-control{
+            border-color:#93c5fd !important;
+            box-shadow:0 0 0 0.2rem rgba(59,130,246,0.12) !important;
+        }
+
+        .btn-primary{
+            background:linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border:none;
+            font-weight:600;
+            border-radius:12px;
+            min-height:44px;
+            box-shadow:0 10px 20px rgba(37,99,235,0.18);
+        }
+
+        .btn-primary:hover{
+            background:linear-gradient(135deg, #1d4ed8, #1e40af);
+        }
+
+        .btn-outline-secondary{
+            border-radius:12px;
+            min-height:44px;
+            border:1px solid #cbd5e1;
+            color:#334155;
+            background:rgba(255,255,255,0.75);
+        }
+
+        .btn-outline-secondary:hover{
+            background:#f8fafc;
+            color:#0f172a;
+            border-color:#94a3b8;
+        }
+
+        .results-header,
+        .distribution-header{
+            background:linear-gradient(180deg, rgba(248,250,252,0.95), rgba(241,245,249,0.95));
+            border-bottom:1px solid #e2e8f0;
+            border-top-left-radius:20px;
+            border-top-right-radius:20px;
+        }
+
+        .results-count{
+            background:#e2e8f0;
+            color:#0f172a;
+            border-radius:999px;
+            font-weight:700;
+            padding:8px 12px;
+        }
+
+        .table{
+            --bs-table-bg: transparent;
+            margin-bottom:0;
+        }
+
+        .table thead th{
+            background:#f8fafc;
+            color:#475569;
+            font-weight:700;
+            font-size:0.9rem;
+            border-bottom:1px solid #e2e8f0;
+            padding-top:16px;
+            padding-bottom:16px;
+        }
+
+        .table tbody td{
+            padding-top:16px;
+            padding-bottom:16px;
+            border-color:#eef2f7;
+            vertical-align:middle;
+        }
+
+        .table-hover tbody tr:hover{
+            background:rgba(59,130,246,0.035);
+        }
+
+        .journal-title{
+            color:var(--text-main);
+            font-weight:600;
+        }
+
+        .journal-issn{
+            color:#64748b;
+            font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+            font-size:0.93rem;
         }
 
         .badge-qualis{
             font-weight:700;
             font-size:0.9rem;
             padding:8px 12px;
-            border-radius:8px;
+            border-radius:10px;
+            min-width:52px;
+            display:inline-block;
         }
 
         .bg-a1{ background:#065f46; color:white; }
@@ -38,61 +288,122 @@
         .bg-a3{ background:#059669; color:white; }
         .bg-a4{ background:#10b981; color:white; }
 
-        .bg-b1{ background:#d97706; color:white; }
-        .bg-b2{ background:#ea580c; color:white; }
-        .bg-b3{ background:#f97316; color:white; }
-        .bg-b4{ background:#fb923c; color:white; }
+        .bg-b1{ background:#b45309; color:white; }
+        .bg-b2{ background:#c2410c; color:white; }
+        .bg-b3{ background:#ea580c; color:white; }
+        .bg-b4{ background:#f97316; color:white; }
 
-        .bg-c{ background:#6b7280; color:white; }
+        .bg-c{ background:#64748b; color:white; }
 
-        .table thead{
-            background:#f1f5f9;
-            font-weight:600;
+        .distribution-table td,
+        .distribution-table th{
+            vertical-align:middle;
+        }
+
+        .distribution-value{
+            font-weight:700;
+            color:var(--text-main);
         }
 
         .empty-state{
-            padding:50px;
+            padding:56px 32px;
             text-align:center;
             color:#94a3b8;
         }
 
-        .btn-primary{
-            background:#2563eb;
-            border:none;
-            font-weight:600;
+        .empty-state strong{
+            display:block;
+            color:#475569;
+            font-size:1rem;
+            margin-bottom:6px;
         }
 
-        .btn-primary:hover{
-            background:#1d4ed8;
-        }
+        @media (max-width: 768px){
+            .hero-card{
+                padding:28px 22px;
+                border-radius:20px;
+            }
 
-        .ts-wrapper.multi .ts-control > div{
-            background:#e2e8f0;
-            color:#0f172a;
-            border-radius:8px;
-            padding:4px 8px;
+            .hero-title{
+                font-size:1.6rem;
+            }
+
+            .filter-card{
+                margin-top:0;
+            }
+
+            .surface-card{
+                border-radius:18px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<nav class="navbar navbar-dark shadow-sm mb-5">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="/">QUALISCAPES</a>
+<nav class="navbar navbar-dark shadow-sm">
+    <div class="container py-2">
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="/">
+            <span class="brand-mark">Q</span>
+            <span>QUALISCAPES</span>
+        </a>
     </div>
 </nav>
 
-<div class="container">
+<header class="hero-section mb-4">
+    <div class="container">
+        <div class="hero-card">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <span class="hero-eyebrow">Sistema de Consulta e Visualização QUALIS CAPES</span>
+
+                    <h1 class="hero-title mt-2 mb-3">
+                        Consulte periódicos por área de avaliação e estrato QUALIS
+                    </h1>
+
+                    <p class="hero-subtitle mb-4">
+                        Ferramenta para apoiar a análise de classificações de periódicos, com filtros por área,
+                        estrato e busca por título ou ISSN.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="hero-tag">Consulta por área</span>
+                        <span class="hero-tag">Filtro por classificação</span>
+                        <span class="hero-tag">Busca por ISSN</span>
+                        <span class="hero-tag">Base 2021–2024</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="hero-stats">
+                        <div class="stat-box">
+                            <small>Fonte</small>
+                            <strong>Plataforma Sucupira</strong>
+                        </div>
+                        <div class="stat-box">
+                            <small>Escopo</small>
+                            <strong>Todas as áreas</strong>
+                        </div>
+                        <div class="stat-box">
+                            <small>Classificações</small>
+                            <strong>A1 até C</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container pb-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">
 
-            <div class="card shadow-sm mb-4">
-                <div class="card-body p-4">
+            <div class="surface-card mb-4 filter-card">
+                <div class="card-body p-4 p-lg-4">
 
-                    <h4 class="fw-bold mb-1">Consulta de Periódicos CAPES</h4>
-
-                    <p class="text-muted mb-4">
+                    <h4 class="section-title">Consulta de Periódicos CAPES</h4>
+                    <p class="section-subtitle mb-4">
                         Pesquise periódicos por área, classificação ou título/ISSN.
                     </p>
 
@@ -105,7 +416,6 @@
 
                         <div class="col-md-5">
                             <label class="form-label fw-semibold">Área de Avaliação</label>
-
                             <select id="select-area" name="area" class="form-select">
                                 <option value="">Todas as áreas</option>
                                 <option th:each="a : ${areas}"
@@ -118,7 +428,6 @@
 
                         <div class="col-md-3">
                             <label class="form-label fw-semibold">Classificações</label>
-
                             <select id="select-tiers" name="tiers" class="form-select" multiple>
                                 <option th:each="t : ${tiers}"
                                         th:value="${t}"
@@ -126,7 +435,6 @@
                                         th:selected="${tiersSelecionados != null and #lists.contains(tiersSelecionados, t)}">
                                 </option>
                             </select>
-
                             <div class="form-text">
                                 Selecione uma ou mais classificações.
                             </div>
@@ -134,7 +442,6 @@
 
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Título ou ISSN</label>
-
                             <input
                                     type="text"
                                     name="search"
@@ -143,7 +450,7 @@
                                     th:value="${buscaTermo}">
                         </div>
 
-                        <div class="col-12 d-flex gap-2">
+                        <div class="col-12 d-flex gap-2 flex-wrap pt-2">
                             <button type="submit" class="btn btn-primary px-4">
                                 Consultar
                             </button>
@@ -157,18 +464,21 @@
                 </div>
             </div>
 
-            <div th:if="${periodicos != null}" class="card shadow-sm mb-4">
-                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold">Resultados da Busca</h5>
+            <div th:if="${periodicos != null}" class="surface-card mb-4">
+                <div class="results-header py-3 px-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <h5 class="mb-1 fw-bold text-dark">Resultados da Busca</h5>
+                        <p class="mb-0 text-muted">Periódicos encontrados com base nos filtros selecionados.</p>
+                    </div>
 
-                    <span class="badge bg-secondary"
+                    <span class="results-count"
                           th:text="${periodicos.size() + ' periódicos encontrados'}">
                     </span>
                 </div>
 
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0">
+                        <table class="table table-hover align-middle">
                             <thead>
                             <tr>
                                 <th class="ps-4">ISSN</th>
@@ -179,8 +489,8 @@
 
                             <tbody>
                             <tr th:each="p : ${periodicos}">
-                                <td class="ps-4 text-muted" th:text="${p.issn}"></td>
-                                <td class="fw-semibold" th:text="${p.title}"></td>
+                                <td class="ps-4 journal-issn" th:text="${p.issn}"></td>
+                                <td class="journal-title" th:text="${p.title}"></td>
                                 <td class="text-center">
                                     <span
                                             class="badge badge-qualis shadow-sm"
@@ -201,7 +511,8 @@
 
                             <tr th:if="${periodicos.empty}">
                                 <td colspan="3" class="empty-state">
-                                    Nenhum periódico encontrado.
+                                    <strong>Nenhum periódico encontrado</strong>
+                                    Ajuste os filtros e tente novamente.
                                 </td>
                             </tr>
                             </tbody>
@@ -210,23 +521,24 @@
                 </div>
             </div>
 
-            <div th:if="${periodicos != null and distribuicao != null}" class="card shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold">Distribuição por Classificação</h5>
+            <div th:if="${periodicos != null and distribuicao != null}" class="surface-card">
+                <div class="distribution-header py-3 px-4">
+                    <h5 class="mb-1 fw-bold text-dark">Distribuição por Classificação</h5>
+                    <p class="mb-0 text-muted">Resumo quantitativo dos periódicos retornados na consulta.</p>
                 </div>
 
-                <div class="card-body">
+                <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table align-middle mb-0">
+                        <table class="table distribution-table align-middle mb-0">
                             <thead>
                             <tr>
-                                <th>Classificação</th>
+                                <th class="ps-4">Classificação</th>
                                 <th>Quantidade</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="entry : ${distribuicao}">
-                                <td>
+                                <td class="ps-4">
                                     <span
                                             class="badge badge-qualis shadow-sm"
                                             th:text="${entry.key}"
@@ -242,12 +554,13 @@
                                         }">
                                     </span>
                                 </td>
-                                <td th:text="${entry.value}"></td>
+                                <td class="distribution-value" th:text="${entry.value}"></td>
                             </tr>
 
                             <tr th:if="${#maps.isEmpty(distribuicao)}">
                                 <td colspan="2" class="empty-state">
-                                    Nenhuma distribuição disponível.
+                                    <strong>Nenhuma distribuição disponível</strong>
+                                    Não há dados para resumir nesta consulta.
                                 </td>
                             </tr>
                             </tbody>
