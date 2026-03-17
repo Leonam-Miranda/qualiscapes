@@ -1,5 +1,6 @@
 package io.github.qualiscapes.service;
 
+import io.github.qualiscapes.exception.ExcelProcessingException;
 import io.github.qualiscapes.model.Periodico;
 import io.github.qualiscapes.repository.PeriodicoRepository;
 import jakarta.annotation.PostConstruct;
@@ -7,6 +8,8 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +18,7 @@ import java.io.InputStream;
 @Service
 public class ExcelDataLoaderService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ExcelDataLoaderService.class);
     private final PeriodicoRepository repository;
 
     public ExcelDataLoaderService(PeriodicoRepository repository){
@@ -22,16 +26,20 @@ public class ExcelDataLoaderService {
     }
 
     @PostConstruct
-    public void loadExcelData(){
+    public void init(){
+        loadExcelData("qualis_capes.xlsx");
+    }
+
+    public void loadExcelData( String fileName){
         if(repository.count() > 0){
             System.out.println("Os dados já foram carregados anteriormente");
             return;
         }
 
-        System.out.println("Iniciando a leitura do arquivo qualis_capes.xlsx...");
+        System.out.println("Iniciando a leitura do arquivo " + fileName + "...");
         List<Periodico> periodicosToSave = new ArrayList<>();
 
-        try(InputStream inputStream = new ClassPathResource("qualis_capes.xlsx").getInputStream();
+        try(InputStream inputStream = new ClassPathResource(fileName).getInputStream();
             Workbook workbook = new XSSFWorkbook(inputStream)){
 
             Sheet sheet = workbook.getSheetAt(0);
@@ -57,7 +65,8 @@ public class ExcelDataLoaderService {
             System.out.println("Concluído: " + periodicosToSave.size() + " periodicos salvos no banco de dados.");
 
         } catch (Exception e){
-            System.err.println("Erro ao ler o arquivo Excel: " + e.getMessage());
+            logger.error("Erro crítico ao processar Excel: ", e);
+            throw new ExcelProcessingException("O arquivo de periódicos está inválido ou mal formatado");
         }
     }
 }
