@@ -1,5 +1,6 @@
 package io.github.qualiscapes.controller;
 
+import io.github.qualiscapes.model.Periodico;
 import io.github.qualiscapes.service.PeriodicoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +29,10 @@ public class WebController {
         model.addAttribute("tiers", service.getAvailableTiers());
 
         if (service.hasAnyFilter(area, tiers, search)) {
-            model.addAttribute("periodicos", service.search(area, tiers, search));
+            List<Periodico> periodicos = service.search(area, tiers, search);
+
+            model.addAttribute("periodicos", periodicos);
+            model.addAttribute("distribuicao", service.buildDistribution(periodicos));
         }
 
         model.addAttribute("areaSelecionada", area);
