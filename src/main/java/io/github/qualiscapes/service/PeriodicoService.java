@@ -4,7 +4,9 @@ import io.github.qualiscapes.model.Periodico;
 import io.github.qualiscapes.repository.PeriodicoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PeriodicoService {
@@ -43,6 +45,22 @@ public class PeriodicoService {
         return normalize(area) != null
                 || normalize(search) != null
                 || (tiers != null && !tiers.isEmpty());
+    }
+
+    public Map<String, Long> buildDistribution(List<Periodico> periodicos) {
+        Map<String, Long> distribuicao = new LinkedHashMap<>();
+
+        for (String tier : AVAILABLE_TIERS) {
+            long count = periodicos.stream()
+                    .filter(p -> tier.equals(p.getTier()))
+                    .count();
+
+            if (count > 0) {
+                distribuicao.put(tier, count);
+            }
+        }
+
+        return distribuicao;
     }
 
     private String normalize(String value) {
