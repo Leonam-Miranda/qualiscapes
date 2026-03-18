@@ -21,7 +21,6 @@
             --primary-dark:#1d4ed8;
             --shadow-card:0 14px 36px rgba(15,23,42,0.08);
             --radius-lg:20px;
-            --radius-md:16px;
         }
 
         body{
@@ -344,6 +343,36 @@
             margin-bottom:6px;
         }
 
+        .pagination-wrapper{
+            border-top:1px solid #e2e8f0;
+            background:rgba(248,250,252,0.7);
+        }
+
+        .page-link{
+            border-radius:10px !important;
+            margin:0 2px;
+            border:1px solid #dbe4ee;
+            color:#334155;
+        }
+
+        .page-link:hover{
+            background:#eff6ff;
+            color:#1d4ed8;
+            border-color:#bfdbfe;
+        }
+
+        .page-item.active .page-link{
+            background:#2563eb;
+            border-color:#2563eb;
+            color:white;
+        }
+
+        .page-item.disabled .page-link{
+            color:#94a3b8;
+            background:#f8fafc;
+            border-color:#e2e8f0;
+        }
+
         @media (min-width: 992px){
             .results-table-wrap{
                 max-height:620px;
@@ -456,6 +485,8 @@
                     </div>
 
                     <form action="/" method="get" class="row g-3">
+                        <input type="hidden" name="page" value="0">
+
                         <div class="col-md-5">
                             <label class="form-label fw-semibold">Área de Avaliação</label>
                             <select id="select-area" name="area" class="form-select">
@@ -482,13 +513,22 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold">Itens por página</label>
+                            <select name="size" class="form-select">
+                                <option value="10" th:selected="${tamanhoPagina == 10}">10</option>
+                                <option value="20" th:selected="${tamanhoPagina == 20}">20</option>
+                                <option value="50" th:selected="${tamanhoPagina == 50}">50</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
                             <label class="form-label fw-semibold">Título ou ISSN</label>
                             <input
                                     type="text"
                                     name="search"
                                     class="form-control"
-                                    placeholder="Ex: Nature ou 0028-0836"
+                                    placeholder="Ex: Nature"
                                     th:value="${buscaTermo}">
                         </div>
 
@@ -497,7 +537,7 @@
                                 Consultar
                             </button>
 
-                            <a href="/" class="btn btn-outline-secondary px-4">
+                            <a th:href="@{/(page=0,size=${tamanhoPagina})}" class="btn btn-outline-secondary px-4">
                                 Limpar filtros
                             </a>
                         </div>
@@ -516,7 +556,7 @@
                             </div>
 
                             <span class="results-count"
-                                  th:text="${periodicos.size() + ' periódicos encontrados'}">
+                                  th:text="${totalItens + ' periódicos encontrados'}">
                             </span>
                         </div>
 
@@ -553,7 +593,7 @@
                                         </td>
                                     </tr>
 
-                                    <tr th:if="${periodicos.empty}">
+                                    <tr th:if="${#lists.isEmpty(periodicos)}">
                                         <td colspan="3" class="empty-state">
                                             <strong>Nenhum periódico encontrado</strong>
                                             Ajuste os filtros e tente novamente.
@@ -563,14 +603,49 @@
                                 </table>
                             </div>
                         </div>
+
+                        <div class="pagination-wrapper px-4 py-3 d-flex justify-content-between align-items-center flex-wrap gap-3"
+                             th:if="${totalPaginas > 1}">
+                            <small class="text-muted">
+                                Página <span th:text="${paginaAtual + 1}"></span> de <span th:text="${totalPaginas}"></span>
+                            </small>
+
+                            <nav>
+                                <ul class="pagination mb-0">
+                                    <li class="page-item" th:classappend="${paginaAtual == 0} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{/(area=${areaSelecionada},tiers=${tiersSelecionados},search=${buscaTermo},page=${paginaAtual - 1},size=${tamanhoPagina})}">
+                                            Anterior
+                                        </a>
+                                    </li>
+
+                                    <li class="page-item"
+                                        th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
+                                        th:if="${i >= paginaAtual - 2 and i <= paginaAtual + 2}"
+                                        th:classappend="${i == paginaAtual} ? 'active'">
+                                        <a class="page-link"
+                                           th:href="@{/(area=${areaSelecionada},tiers=${tiersSelecionados},search=${buscaTermo},page=${i},size=${tamanhoPagina})}"
+                                           th:text="${i + 1}">
+                                        </a>
+                                    </li>
+
+                                    <li class="page-item" th:classappend="${paginaAtual + 1 >= totalPaginas} ? 'disabled'">
+                                        <a class="page-link"
+                                           th:href="@{/(area=${areaSelecionada},tiers=${tiersSelecionados},search=${buscaTermo},page=${paginaAtual + 1},size=${tamanhoPagina})}">
+                                            Próxima
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-lg-4" th:if="${distribuicao != null}">
-                    <div class="surface-card distribution-card">
+                    <div class="surface-card">
                         <div class="distribution-header py-3 px-4">
                             <h5 class="mb-1 fw-bold text-dark">Distribuição</h5>
-                            <p class="mb-0 text-muted">Contagem por classificação.</p>
+                            <p class="mb-0 text-muted">Contagem por classificação na página atual.</p>
                         </div>
 
                         <div class="card-body p-0">
@@ -608,7 +683,7 @@
                                     <tr th:if="${#maps.isEmpty(distribuicao)}">
                                         <td colspan="2" class="empty-state">
                                             <strong>Nenhuma distribuição disponível</strong>
-                                            Não há dados para resumir nesta consulta.
+                                            Não há dados para resumir nesta página.
                                         </td>
                                     </tr>
                                     </tbody>

@@ -1,6 +1,8 @@
 package io.github.qualiscapes.repository;
 
 import io.github.qualiscapes.model.Periodico;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,10 +23,11 @@ public interface PeriodicoRepository extends JpaRepository<Periodico, Long> {
                OR p.issn LIKE CONCAT('%', :search, '%'))
           AND (:applyTierFilter = false OR p.tier IN :tiers)
         """)
-      List<Periodico> findByFilters(
+      Page<Periodico> findByFilters(
               @Param("area") String area,
               @Param("tiers") List<String> tiers,
               @Param("applyTierFilter") boolean applyTierFilter,
-              @Param("search") String search
+              @Param("search") String search,
+              Pageable pageable
       );
 }

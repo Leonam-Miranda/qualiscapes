@@ -2,6 +2,9 @@ package io.github.qualiscapes.controller;
 
 import io.github.qualiscapes.model.Periodico;
 import io.github.qualiscapes.service.PeriodicoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,11 +33,14 @@ public class PeriodicoRestController {
     }
 
     @GetMapping("/busca")
-    public List<Periodico> busca(
+    public Page<Periodico> busca(
             @RequestParam(required = false) String area,
             @RequestParam(required = false) List<String> tiers,
-            @RequestParam(required = false) String search
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
     ) {
-        return service.search(area, tiers, search);
+        Pageable pageable = PageRequest.of(page, size);
+        return service.search(area, tiers, search, pageable);
     }
 }

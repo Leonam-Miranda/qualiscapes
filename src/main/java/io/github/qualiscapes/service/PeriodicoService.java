@@ -2,6 +2,8 @@ package io.github.qualiscapes.service;
 
 import io.github.qualiscapes.model.Periodico;
 import io.github.qualiscapes.repository.PeriodicoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -28,7 +30,7 @@ public class PeriodicoService {
         return AVAILABLE_TIERS;
     }
 
-    public List<Periodico> search(String area, List<String> tiers, String search) {
+    public Page<Periodico> search(String area, List<String> tiers, String search, Pageable pageable) {
         String normalizedArea = normalize(area);
         String normalizedSearch = normalize(search);
         boolean applyTierFilter = tiers != null && !tiers.isEmpty();
@@ -37,14 +39,9 @@ public class PeriodicoService {
                 normalizedArea,
                 tiers,
                 applyTierFilter,
-                normalizedSearch
+                normalizedSearch,
+                pageable
         );
-    }
-
-    public boolean hasAnyFilter(String area, List<String> tiers, String search) {
-        return normalize(area) != null
-                || normalize(search) != null
-                || (tiers != null && !tiers.isEmpty());
     }
 
     public Map<String, Long> buildDistribution(List<Periodico> periodicos) {
