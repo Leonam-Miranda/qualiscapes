@@ -27,6 +27,4 @@ public interface PeriodicoRepository extends JpaRepository<Periodico, Long> {
               @Param("applyTierFilter") boolean applyTierFilter,
               @Param("search") String search
       );
-
-      List<Periodico> findByAvaliationAreaIgnoreCase(String avaliationArea);
 }
