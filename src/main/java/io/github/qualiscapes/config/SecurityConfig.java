@@ -39,7 +39,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         UserDetails admin = User.builder()
                 .username("admin")
-                .password("{noop}admin123") // O {noop} é o segredo aqui!
+                .password("{noop}admin123")
                 .roles("ADMIN")
                 .build();
 
